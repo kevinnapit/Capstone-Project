@@ -1,0 +1,1 @@
+<x-app-layout><x-slot name="header"><h1 class="text-xl font-semibold text-gray-900">Tambah Tarif Layanan</h1></x-slot><form method="POST" action="{{ route('service-prices.store') }}" class="rounded-xl border bg-white p-6 shadow-sm">@include('service-prices._form', ['method' => 'POST'])</form></x-app-layout>

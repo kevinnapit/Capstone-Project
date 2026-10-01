@@ -120,6 +120,14 @@ Status minimal yang disarankan:
 
 Perubahan status harus tervalidasi. Contohnya, pesanan `completed` tidak boleh kembali menjadi `draft` tanpa prosedur koreksi dan audit log.
 
+Keputusan MVP yang sudah diterapkan:
+
+- Satu pesanan dapat memuat campuran produk ATK dan layanan.
+- Nomor pesanan memakai format `ORD-YYYYMMDD-XXXX` dengan urutan harian.
+- Kuantitas tagihan layanan satu sisi/cetak dihitung dari `pages × copies`.
+- Kuantitas tagihan layanan timbal balik dihitung dari `ceil(pages ÷ 2) × copies`.
+- Harga dan nama produk/layanan disimpan sebagai snapshot ketika draft dibuat.
+
 ### Harga
 
 - Harga transaksi harus disalin sebagai snapshot ke detail transaksi.
@@ -299,11 +307,10 @@ Sebuah fitur dianggap selesai jika:
 
 - Bahan apa saja yang akan dilacak untuk layanan fotokopi/cetak: kertas saja atau termasuk tinta/toner.
 - Waktu pasti pengurangan stok: saat mulai diproses atau saat transaksi selesai.
-- Apakah satu pesanan dapat berisi campuran ATK dan layanan.
 - Apakah pembayaran parsial dan piutang diperlukan.
 - Apakah pelanggan perlu disimpan sebagai master data.
 - Apakah integrasi WhatsApp hanya berupa pencatatan sumber pesanan atau integrasi pesan otomatis.
-- Format nomor pesanan dan struk.
+- Format struk.
 - Kebijakan retur, refund, diskon, dan pajak jika kelak diperlukan.
 
 Hindari mengasumsikan jawaban atas poin-poin tersebut di dalam kode. Catat keputusan tim terlebih dahulu, lalu perbarui requirement, ERD, migration, dan pengujian secara konsisten.

@@ -1,0 +1,1 @@
+<x-app-layout><x-slot name="header"><h1 class="text-xl font-semibold text-gray-900">Tambah Kategori</h1></x-slot><form method="POST" action="{{ route('categories.store') }}" class="max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm">@include('categories._form', ['method' => 'POST'])</form></x-app-layout>

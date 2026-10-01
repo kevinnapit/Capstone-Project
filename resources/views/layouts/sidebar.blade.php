@@ -9,18 +9,30 @@
                     <span class="ml-3">Dashboard</span>
                 </a>
             </li>
-            <li>
-                <span class="flex cursor-not-allowed items-center rounded-lg p-3 text-gray-400" title="Modul belum tersedia">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 7V5a3 3 0 0 1 6 0v2m-7 0h14l-1 14H6L5 7Z" /></svg>
-                    <span class="ml-3">Pesanan</span>
-                </span>
-            </li>
-            <li>
-                <span class="flex cursor-not-allowed items-center rounded-lg p-3 text-gray-400" title="Modul belum tersedia">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7 12 3 4 7m16 0-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-                    <span class="ml-3">Master Data</span>
-                </span>
-            </li>
+            @can('orders.view')
+                <li>
+                    <a href="{{ route('orders.index') }}" class="flex items-center rounded-lg p-3 {{ request()->routeIs('orders.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 7V5a3 3 0 0 1 6 0v2m-7 0h14l-1 14H6L5 7Z" /></svg>
+                        <span class="ml-3">Pesanan</span>
+                    </a>
+                </li>
+            @endcan
+            @can('master-data.manage')
+                <li>
+                    <a href="{{ route('products.index') }}" class="flex items-center rounded-lg p-3 {{ request()->routeIs('products.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7 12 3 4 7m16 0-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                        <span class="ml-3">Produk</span>
+                    </a>
+                </li>
+                <li class="ml-8"><a href="{{ route('categories.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('categories.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Kategori</a></li>
+                <li class="ml-8"><a href="{{ route('units.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('units.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Satuan</a></li>
+                <li class="ml-8"><a href="{{ route('paper-types.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('paper-types.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Jenis Kertas</a></li>
+                <li class="ml-8"><a href="{{ route('service-types.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('service-types.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Jenis Layanan</a></li>
+                <li class="ml-8"><a href="{{ route('print-modes.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('print-modes.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Mode Cetak</a></li>
+                <li class="ml-8"><a href="{{ route('service-prices.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('service-prices.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Tarif Layanan</a></li>
+                <li class="ml-8"><a href="{{ route('order-channels.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('order-channels.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Channel Pesanan</a></li>
+                <li class="ml-8"><a href="{{ route('payment-methods.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('payment-methods.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Metode Pembayaran</a></li>
+            @endcan
             <li>
                 <span class="flex cursor-not-allowed items-center rounded-lg p-3 text-gray-400" title="Modul belum tersedia">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V9m5 10V5m5 14v-7m5 7V3" /></svg>

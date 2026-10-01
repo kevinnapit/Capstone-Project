@@ -136,7 +136,7 @@ CREATE TABLE `orders` (
   `customer_id` bigint,
   `channel_id` bigint NOT NULL,
   `created_by` bigint NOT NULL,
-  `status` ENUM ('draft', 'confirmed', 'in_progress', 'completed', 'cancelled') NOT NULL DEFAULT 'draft',
+  `status` ENUM ('draft', 'confirmed', 'processing', 'completed', 'cancelled') NOT NULL DEFAULT 'draft',
   `ordered_at` datetime NOT NULL,
   `subtotal` decimal(15,2) NOT NULL DEFAULT 0,
   `discount_amount` decimal(15,2) NOT NULL DEFAULT 0,
@@ -179,8 +179,8 @@ CREATE TABLE `service_item_details` (
 CREATE TABLE `order_status_histories` (
   `id` bigint PRIMARY KEY AUTO_INCREMENT,
   `order_id` bigint NOT NULL,
-  `from_status` ENUM ('draft', 'confirmed', 'in_progress', 'completed', 'cancelled'),
-  `to_status` ENUM ('draft', 'confirmed', 'in_progress', 'completed', 'cancelled') NOT NULL,
+  `from_status` ENUM ('draft', 'confirmed', 'processing', 'completed', 'cancelled'),
+  `to_status` ENUM ('draft', 'confirmed', 'processing', 'completed', 'cancelled') NOT NULL,
   `changed_by` bigint NOT NULL,
   `reason` varchar(500),
   `created_at` timestamp NOT NULL

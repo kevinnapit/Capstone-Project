@@ -1,0 +1,1 @@
+<x-app-layout><x-slot name="header"><h1 class="text-xl font-semibold text-gray-900">Tambah Jenis Kertas</h1></x-slot><form method="POST" action="{{ route('paper-types.store') }}" class="rounded-xl border bg-white p-6 shadow-sm">@include('paper-types._form', ['method' => 'POST'])</form></x-app-layout>
