@@ -23,6 +23,30 @@
         @endcan
     </div>
 
+    <div class="mt-6 grid gap-5 xl:grid-cols-3 2xl:grid-cols-4">
+        @can('reports.view')
+            <section class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm xl:col-span-2">
+                <div class="flex items-start justify-between"><div><h2 class="font-semibold text-gray-900">Tren penjualan</h2><p class="mt-1 text-sm text-gray-500">Nilai pesanan selesai selama 7 hari terakhir.</p></div><a href="{{ route('reports.sales') }}" class="text-sm font-medium text-blue-700 hover:underline">Laporan lengkap</a></div>
+                <div id="sales-trend-chart" class="mt-3"></div>
+                <script id="sales-trend-data" type="application/json">@json($salesChart)</script>
+            </section>
+        @endcan
+
+        <section class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div><h2 class="font-semibold text-gray-900">Status pesanan</h2><p class="mt-1 text-sm text-gray-500">Distribusi seluruh pesanan saat ini.</p></div>
+            <div id="order-status-chart" class="mt-3"></div>
+            <script id="order-status-data" type="application/json">@json($statusChart)</script>
+        </section>
+
+        @can('reports.view')
+            <section class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div><h2 class="font-semibold text-gray-900">Komposisi penjualan</h2><p class="mt-1 text-sm text-gray-500">Produk dan layanan, 30 hari terakhir.</p></div>
+                <div id="sales-composition-chart" class="mt-3"></div>
+                <script id="sales-composition-data" type="application/json">@json($compositionChart)</script>
+            </section>
+        @endcan
+    </div>
+
     <div class="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
             <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4"><h2 class="font-semibold text-gray-900">Pesanan terbaru</h2><a href="{{ route('orders.index') }}" class="text-sm font-medium text-blue-700 hover:underline">Lihat semua</a></div>
