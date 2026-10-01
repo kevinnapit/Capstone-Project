@@ -34,11 +34,12 @@ Jika nama service sudah dipakai, Render dapat meminta nama lain. Sesuaikan `APP_
 
 Pada setiap startup container, `docker/start.sh` akan:
 
-1. membuat dan memperbaiki permission folder Laravel;
+1. membuat folder cache Laravel;
 2. membuat cache konfigurasi, route, dan view;
 3. menjalankan `php artisan migrate --force`;
 4. menjalankan seeder idempotent untuk role, permission, master data, dan akun admin pertama;
-5. menjalankan PHP-FPM dan Nginx melalui Supervisor.
+5. memperbaiki ownership seluruh cache untuk pengguna PHP-FPM;
+6. menjalankan PHP-FPM dan Nginx melalui Supervisor.
 
 Aset Tailwind, Flowbite, dan JavaScript dibangun saat Docker image dibuat, sehingga Node.js tidak ikut masuk ke image runtime.
 
