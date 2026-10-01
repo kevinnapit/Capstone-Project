@@ -32,7 +32,9 @@ services:
       - key: CACHE_DRIVER
         value: file
       - key: SESSION_DRIVER
-        value: cookie
+        value: database
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
       - key: QUEUE_CONNECTION
         value: sync
       - key: ADMIN_NAME
@@ -48,4 +50,3 @@ databases:
     region: singapore
     databaseName: capstone_project_ut
     user: capstone_project_ut
-

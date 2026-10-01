@@ -52,6 +52,6 @@ Aset Tailwind, Flowbite, dan JavaScript dibangun saat Docker image dibuat, sehin
 ## Catatan
 
 - Database menggunakan PostgreSQL melalui `DATABASE_URL` internal Render.
-- Session menggunakan encrypted cookie agar tidak hilang ketika filesystem container diganti.
+- Session disimpan di PostgreSQL dan cookie hanya dikirim melalui HTTPS agar login tetap stabil ketika container diganti.
 - File yang disimpan ke filesystem container bersifat sementara. Jika nanti ada upload dokumen/gambar, gunakan object storage atau persistent disk.
 - `ADMIN_EMAIL` dan `ADMIN_PASSWORD` hanya dipakai untuk membuat admin jika tabel pengguna masih kosong. Mengubah nilainya tidak mengganti password admin yang sudah ada.
