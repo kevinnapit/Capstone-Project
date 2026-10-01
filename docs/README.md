@@ -127,6 +127,9 @@ Keputusan MVP yang sudah diterapkan:
 - Kuantitas tagihan layanan satu sisi/cetak dihitung dari `pages × copies`.
 - Kuantitas tagihan layanan timbal balik dihitung dari `ceil(pages ÷ 2) × copies`.
 - Harga dan nama produk/layanan disimpan sebagai snapshot ketika draft dibuat.
+- Pembayaran parsial didukung, tetapi pesanan hanya dapat diselesaikan setelah lunas.
+- Stok produk dan kertas layanan dikurangi saat pesanan berubah menjadi `completed`.
+- Pembatalan dapat mencatat lembar kertas yang telanjur digunakan sebagai pergerakan stok `waste`.
 
 ### Harga
 

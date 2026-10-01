@@ -16,12 +16,7 @@
     </div>
     <div>
         <x-input-label for="role" value="Role" />
-        <select id="role" name="role" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
-            <option value="">Pilih role</option>
-            @foreach ($roles as $role)
-                <option value="{{ $role->name }}" @selected(old('role', isset($managedUser) ? $managedUser->roles->first()?->name : '') === $role->name)>{{ $role->name }}</option>
-            @endforeach
-        </select>
+        <div class="mt-1"><x-searchable-select name="role" :options="$roles->pluck('name', 'name')" :selected="old('role', isset($managedUser) ? $managedUser->roles->first()?->name : '')" placeholder="Pilih role" required /></div>
         <x-input-error :messages="$errors->get('role')" class="mt-2" />
     </div>
     <div></div>

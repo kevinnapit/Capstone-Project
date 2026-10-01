@@ -14,12 +14,7 @@
 
     <form method="GET" action="{{ route('orders.index') }}" class="mb-4 grid gap-2 sm:grid-cols-[minmax(0,1fr)_12rem_auto]">
         <input name="search" value="{{ $search }}" placeholder="Cari nomor atau pelanggan..." class="rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-        <select name="status" class="rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-            <option value="">Semua status</option>
-            @foreach ($statuses as $status)
-                <option value="{{ $status->value }}" @selected($selectedStatus === $status->value)>{{ $status->label() }}</option>
-            @endforeach
-        </select>
+        <x-searchable-select name="status" :options="collect($statuses)->mapWithKeys(fn ($status) => [$status->value => $status->label()])" :selected="$selectedStatus" placeholder="Semua status" />
         <button class="rounded-lg bg-gray-800 px-5 py-2 text-sm font-medium text-white hover:bg-gray-900">Filter</button>
     </form>
 

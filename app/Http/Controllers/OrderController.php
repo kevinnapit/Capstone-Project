@@ -10,6 +10,7 @@ use App\Http\Requests\StoreDraftOrderRequest;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderChannel;
+use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\ServicePrice;
 use Illuminate\Database\Eloquent\Builder;
@@ -70,14 +71,14 @@ class OrderController extends Controller
             'customers' => Customer::query()->orderBy('name')->get(),
             'productOptions' => $products->map(fn (Product $product): array => [
                 'id' => (string) $product->id,
-                'label' => "{$product->name} ({$product->sku})",
+                'label' => "{$product->name} ({$product->sku}) — Rp ".number_format((float) $product->selling_price, 0, ',', '.')." — stok {$product->current_stock} {$product->unit->symbol}",
                 'price' => (float) $product->selling_price,
                 'stock' => (float) $product->current_stock,
                 'unit' => $product->unit->symbol,
             ])->values(),
             'serviceOptions' => $servicePrices->map(fn (ServicePrice $price): array => [
                 'id' => (string) $price->id,
-                'label' => $price->serviceType->name.' - '.$price->paperType->code.' - '.($price->printMode?->name ?? $price->side_mode->label()),
+                'label' => $price->serviceType->name.' - '.$price->paperType->code.' - '.($price->printMode?->name ?? $price->side_mode->label()).' — Rp '.number_format((float) $price->price, 0, ',', '.'),
                 'price' => (float) $price->price,
                 'side_mode' => $price->side_mode->value,
             ])->values(),
@@ -105,7 +106,11 @@ class OrderController extends Controller
             'items.servicePrice.paperType',
             'items.servicePrice.printMode',
             'items.serviceDetail.paperType',
+            'items.serviceDetail.paperType.inventoryProduct',
             'statusHistories.changedBy',
+            'payments.paymentMethod',
+            'payments.receiver',
+            'adjustments.creator',
         ]);
 
         $availableStatuses = collect(OrderStatus::cases())
@@ -114,7 +119,9 @@ class OrderController extends Controller
                 ? $request->user()->can('orders.cancel')
                 : $request->user()->can('orders.update'));
 
-        return view('orders.show', compact('order', 'availableStatuses'));
+        $paymentMethods = PaymentMethod::query()->where('is_active', true)->orderBy('name')->get();
+
+        return view('orders.show', compact('order', 'availableStatuses', 'paymentMethods'));
     }
 
     public function updateStatus(
@@ -125,7 +132,13 @@ class OrderController extends Controller
         $validated = $request->validated();
         $targetStatus = OrderStatus::from($validated['status']);
 
-        $action->execute($order, $request->user(), $targetStatus, $validated['reason'] ?? null);
+        $action->execute(
+            $order,
+            $request->user(),
+            $targetStatus,
+            $validated['reason'] ?? null,
+            $validated['consumed_sheets'] ?? []
+        );
 
         return to_route('orders.show', $order)
             ->with('status', "Status pesanan berhasil diubah menjadi {$targetStatus->label()}.");

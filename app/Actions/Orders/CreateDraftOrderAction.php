@@ -10,6 +10,7 @@ use App\Models\OrderChannel;
 use App\Models\Product;
 use App\Models\ServicePrice;
 use App\Models\User;
+use App\Services\AuditLogger;
 use App\Services\OrderNumberGenerator;
 use App\Services\OrderPricingService;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ class CreateDraftOrderAction
     public function __construct(
         private readonly OrderPricingService $pricing,
         private readonly OrderNumberGenerator $numberGenerator,
+        private readonly AuditLogger $audit,
     ) {}
 
     public function execute(User $creator, array $data): Order
@@ -93,6 +95,12 @@ class CreateDraftOrderAction
 
             $subtotal = $this->pricing->sum($subtotals);
             $order->update(['subtotal' => $subtotal, 'grand_total' => $subtotal]);
+
+            $this->audit->log($creator, 'order.created', $order, null, [
+                'order_number' => $order->order_number,
+                'status' => $order->status->value,
+                'grand_total' => $subtotal,
+            ], "Draft {$order->order_number} dibuat.");
 
             return $order->fresh(['customer', 'channel', 'creator', 'items.product', 'items.servicePrice', 'items.serviceDetail', 'statusHistories']);
         });

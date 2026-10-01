@@ -22,8 +22,7 @@ CREATE TABLE `role_user` (
   `user_id` bigint NOT NULL,
   `role_id` bigint NOT NULL,
   `created_at` timestamp,
-  PRIMARY KEY (`user_id`, `role_id`)
-);
+  PRIMARY KEY (`user_id`, `role_id
 
 CREATE TABLE `password_reset_tokens` (
   `email` varchar(150) PRIMARY KEY,

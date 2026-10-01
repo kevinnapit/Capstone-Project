@@ -10,6 +10,7 @@ use App\Models\ProductCategory;
 use App\Models\ServicePrice;
 use App\Models\ServiceType;
 use App\Models\Unit;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 
 class ServiceMasterDataSeeder extends Seeder
@@ -77,12 +78,14 @@ class ServiceMasterDataSeeder extends Seeder
 
     private function savePrice(ServiceType $service, PaperType $paper, ?PrintMode $mode, SideMode $sideMode, int $price, string $effectiveFrom): void
     {
+        $effectiveDate = CarbonImmutable::parse($effectiveFrom)->startOfDay();
+
         ServicePrice::query()->updateOrCreate([
             'service_type_id' => $service->id,
             'paper_type_id' => $paper->id,
             'print_mode_id' => $mode?->id,
-            'side_mode' => $sideMode,
-            'effective_from' => $effectiveFrom,
+            'side_mode' => $sideMode->value,
+            'effective_from' => $effectiveDate,
         ], [
             'price' => $price,
             'effective_until' => null,

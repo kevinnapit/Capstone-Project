@@ -85,9 +85,54 @@
             @if ($order->notes)
                 <section class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm"><h2 class="font-semibold text-gray-900">Catatan</h2><p class="mt-2 whitespace-pre-line text-sm text-gray-600">{{ $order->notes }}</p></section>
             @endif
+
+            <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
+                    <h2 class="font-semibold text-gray-900">Riwayat pembayaran</h2>
+                    @php
+                        $paymentClass = match ($order->paymentStatus()) {
+                            'paid' => 'bg-green-100 text-green-800',
+                            'partial' => 'bg-amber-100 text-amber-800',
+                            default => 'bg-red-100 text-red-800',
+                        };
+                        $paymentLabel = match ($order->paymentStatus()) {
+                            'paid' => 'Lunas',
+                            'partial' => 'Sebagian',
+                            default => 'Belum dibayar',
+                        };
+                    @endphp
+                    <span class="rounded-full px-2.5 py-1 text-xs font-medium {{ $paymentClass }}">{{ $paymentLabel }}</span>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    @forelse ($order->payments as $payment)
+                        <div class="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div><p class="font-medium text-gray-900">{{ $payment->paymentMethod->name }}</p><p class="text-xs text-gray-500">{{ $payment->paid_at->format('d/m/Y H:i') }} · {{ $payment->receiver->name }}{{ $payment->reference_number ? ' · '.$payment->reference_number : '' }}</p></div>
+                            <p class="font-semibold text-gray-900">Rp {{ number_format((float) $payment->amount, 0, ',', '.') }}</p>
+                        </div>
+                    @empty
+                        <p class="px-5 py-6 text-center text-sm text-gray-500">Belum ada pembayaran.</p>
+                    @endforelse
+                </div>
+            </section>
         </div>
 
         <aside class="space-y-5">
+            @can('payments.create')
+                @if (! in_array($order->status, [\App\Enums\OrderStatus::Completed, \App\Enums\OrderStatus::Cancelled], true) && $order->balanceDue() > 0)
+                    <section class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                        <h2 class="font-semibold text-gray-900">Catat pembayaran</h2>
+                        <p class="mt-1 text-sm text-gray-500">Sisa tagihan: <strong class="text-gray-900">Rp {{ number_format($order->balanceDue(), 0, ',', '.') }}</strong></p>
+                        <form method="POST" action="{{ route('orders.payments.store', $order) }}" class="mt-4 space-y-3">
+                            @csrf
+                            <x-searchable-select name="payment_method_id" :options="$paymentMethods->pluck('name', 'id')" :selected="old('payment_method_id')" placeholder="Pilih metode" required />
+                            <input type="number" name="amount" value="{{ old('amount', $order->balanceDue()) }}" min="0.01" max="{{ $order->balanceDue() }}" step="0.01" required placeholder="Jumlah pembayaran" class="w-full rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                            <input type="text" name="reference_number" value="{{ old('reference_number') }}" maxlength="100" placeholder="Nomor referensi (opsional)" class="w-full rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
+                            <button class="w-full rounded-lg bg-green-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-800">Simpan pembayaran</button>
+                        </form>
+                    </section>
+                @endif
+            @endcan
+
             @if ($availableStatuses->isNotEmpty())
                 <section class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm" x-data="{ target: '{{ old('status', $availableStatuses->first()->value) }}' }">
                     <h2 class="font-semibold text-gray-900">Ubah status</h2>
@@ -97,15 +142,22 @@
                         @method('PATCH')
                         <div>
                             <label for="status" class="mb-1 block text-sm font-medium text-gray-700">Status berikutnya</label>
-                            <select id="status" name="status" x-model="target" class="w-full rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                                @foreach ($availableStatuses as $status)
-                                    <option value="{{ $status->value }}">{{ $status->label() }}</option>
-                                @endforeach
-                            </select>
+                            <x-searchable-select name="status" :options="$availableStatuses->mapWithKeys(fn ($status) => [$status->value => $status->label()])" model="target" placeholder="Pilih status" required />
                         </div>
                         <div x-show="target === 'cancelled'" x-cloak>
                             <label for="reason" class="mb-1 block text-sm font-medium text-gray-700">Alasan pembatalan <span class="text-red-600">*</span></label>
                             <textarea id="reason" name="reason" rows="3" :required="target === 'cancelled'" class="w-full rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">{{ old('reason') }}</textarea>
+                            @if ($order->items->contains(fn ($item) => $item->serviceDetail !== null))
+                                <div class="mt-3 rounded-lg bg-amber-50 p-3">
+                                    <p class="text-xs font-medium text-amber-900">Bahan yang sudah terpakai</p>
+                                    <p class="mb-2 text-xs text-amber-700">Isi nol jika belum ada kertas yang digunakan.</p>
+                                    @foreach ($order->items->filter(fn ($item) => $item->serviceDetail !== null) as $item)
+                                        <label class="mb-2 block text-xs text-gray-700">{{ $item->item_name_snapshot }} (maks. {{ $item->serviceDetail->sheets_billed }} lembar)
+                                            <input type="number" name="consumed_sheets[{{ $item->id }}]" value="{{ old('consumed_sheets.'.$item->id, 0) }}" min="0" max="{{ $item->serviceDetail->sheets_billed }}" class="mt-1 w-full rounded-lg border-gray-300 text-sm">
+                                        </label>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
                         <button class="w-full rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800">Simpan perubahan</button>
                     </form>
@@ -130,7 +182,7 @@
 
             <section class="rounded-xl border border-gray-200 bg-white p-5 text-sm shadow-sm">
                 <h2 class="font-semibold text-gray-900">Informasi</h2>
-                <dl class="mt-3 space-y-2"><div class="flex justify-between gap-3"><dt class="text-gray-500">Dibuat oleh</dt><dd class="text-right text-gray-900">{{ $order->creator->name }}</dd></div><div class="flex justify-between gap-3"><dt class="text-gray-500">Dibayar</dt><dd class="text-right text-gray-900">Rp {{ number_format((float) $order->paid_amount, 0, ',', '.') }}</dd></div></dl>
+                <dl class="mt-3 space-y-2"><div class="flex justify-between gap-3"><dt class="text-gray-500">Dibuat oleh</dt><dd class="text-right text-gray-900">{{ $order->creator->name }}</dd></div><div class="flex justify-between gap-3"><dt class="text-gray-500">Dibayar</dt><dd class="text-right text-gray-900">Rp {{ number_format((float) $order->paid_amount, 0, ',', '.') }}</dd></div><div class="flex justify-between gap-3"><dt class="text-gray-500">Sisa</dt><dd class="text-right font-medium text-gray-900">Rp {{ number_format($order->balanceDue(), 0, ',', '.') }}</dd></div></dl>
             </section>
         </aside>
     </div>

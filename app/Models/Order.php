@@ -53,4 +53,28 @@ class Order extends Model
     {
         return $this->hasMany(OrderStatusHistory::class)->oldest('created_at');
     }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class)->latest('paid_at');
+    }
+
+    public function adjustments(): HasMany
+    {
+        return $this->hasMany(OrderAdjustment::class)->latest('created_at');
+    }
+
+    public function balanceDue(): float
+    {
+        return max(0, round((float) $this->grand_total - (float) $this->paid_amount, 2));
+    }
+
+    public function paymentStatus(): string
+    {
+        if ((float) $this->paid_amount <= 0) {
+            return 'unpaid';
+        }
+
+        return $this->balanceDue() > 0 ? 'partial' : 'paid';
+    }
 }

@@ -1,16 +1,21 @@
 <?php
 
+use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderChannelController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaperTypeController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PrintModeController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\ServicePriceController;
 use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\RedirectResponse;
@@ -33,9 +38,7 @@ Route::get('/', function (): RedirectResponse {
 
 Route::get('/up', fn () => response()->json(['status' => 'ok']))->name('health');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -67,6 +70,15 @@ Route::middleware('auth')->group(function () {
     Route::post('orders', [OrderController::class, 'store'])->middleware('permission:orders.create')->name('orders.store');
     Route::get('orders/{order}', [OrderController::class, 'show'])->middleware('permission:orders.view')->name('orders.show');
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->middleware('permission:orders.update|orders.cancel')->name('orders.status.update');
+    Route::post('orders/{order}/payments', [PaymentController::class, 'store'])->middleware('permission:payments.create')->name('orders.payments.store');
+
+    Route::middleware('permission:stock.adjust')->group(function () {
+        Route::get('stock-movements', [StockMovementController::class, 'index'])->name('stock-movements.index');
+        Route::post('stock-movements', [StockMovementController::class, 'store'])->name('stock-movements.store');
+    });
+
+    Route::get('reports/sales', [SalesReportController::class, 'index'])->middleware('permission:reports.view')->name('reports.sales');
+    Route::get('audit-logs', [AuditLogController::class, 'index'])->middleware('permission:audit-logs.view')->name('audit-logs.index');
 });
 
 require __DIR__.'/auth.php';

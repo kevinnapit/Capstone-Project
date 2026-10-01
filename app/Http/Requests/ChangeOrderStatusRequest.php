@@ -24,6 +24,8 @@ class ChangeOrderStatusRequest extends FormRequest
         return [
             'status' => ['required', Rule::enum(OrderStatus::class)],
             'reason' => ['nullable', 'string', 'max:500', 'required_if:status,'.OrderStatus::Cancelled->value],
+            'consumed_sheets' => ['nullable', 'array'],
+            'consumed_sheets.*' => ['nullable', 'integer', 'min:0'],
         ];
     }
 

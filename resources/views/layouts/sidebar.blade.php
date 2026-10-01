@@ -33,12 +33,22 @@
                 <li class="ml-8"><a href="{{ route('order-channels.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('order-channels.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Channel Pesanan</a></li>
                 <li class="ml-8"><a href="{{ route('payment-methods.index') }}" class="block rounded-lg px-3 py-2 text-sm {{ request()->routeIs('payment-methods.*') ? 'bg-blue-50 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100' }}">Metode Pembayaran</a></li>
             @endcan
+            @can('stock.adjust')
+                <li>
+                    <a href="{{ route('stock-movements.index') }}" class="flex items-center rounded-lg p-3 {{ request()->routeIs('stock-movements.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h10" /></svg>
+                        <span class="ml-3">Pergerakan Stok</span>
+                    </a>
+                </li>
+            @endcan
+            @can('reports.view')
             <li>
-                <span class="flex cursor-not-allowed items-center rounded-lg p-3 text-gray-400" title="Modul belum tersedia">
+                <a href="{{ route('reports.sales') }}" class="flex items-center rounded-lg p-3 {{ request()->routeIs('reports.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19V9m5 10V5m5 14v-7m5 7V3" /></svg>
                     <span class="ml-3">Laporan</span>
-                </span>
+                </a>
             </li>
+            @endcan
         </ul>
 
         <div class="my-5 border-t border-gray-200"></div>
@@ -62,6 +72,9 @@
                         <span class="ml-3">Role & Permission</span>
                     </a>
                 </li>
+            @endcan
+            @can('audit-logs.view')
+                <li><a href="{{ route('audit-logs.index') }}" class="flex items-center rounded-lg p-3 {{ request()->routeIs('audit-logs.*') ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100' }}"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M8 3h8l3 3v15H5V3h3Z" /></svg><span class="ml-3">Audit Log</span></a></li>
             @endcan
             <li>
                 <a href="{{ route('profile.edit') }}" class="flex items-center rounded-lg p-3 text-gray-700 hover:bg-gray-100">
