@@ -10,7 +10,7 @@ services:
     autoDeployTrigger: commit
     envVars:
       - key: APP_NAME
-        value: Capstone Project UT
+        value: Edira Fotocopy
       - key: APP_ENV
         value: production
       - key: APP_DEBUG

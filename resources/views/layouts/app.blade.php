@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Sistem Fotokopi') }}</title>
+        <title>{{ config('app.name', 'Edira Fotocopy') }}</title>
+        <link rel="icon" type="image/jpeg" href="{{ asset('images/logoedira.png') }}">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
@@ -25,8 +26,8 @@
                     </button>
 
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
-                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-700 text-lg font-bold text-white">FC</span>
-                        <span class="hidden text-lg font-semibold sm:block">Sistem Fotokopi</span>
+                        <img src="{{ asset('images/logoedira.png') }}" alt="Logo Edira Fotocopy" class="h-10 w-auto max-w-28 rounded-md object-contain" />
+                        <span class="hidden text-lg font-semibold sm:block">Edira Fotocopy</span>
                     </a>
                 </div>
 

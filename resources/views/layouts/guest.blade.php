@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Sistem Fotokopi') }}</title>
+        <title>{{ config('app.name', 'Edira Fotocopy') }}</title>
+        <link rel="icon" type="image/png" href="{{ asset('images/logoedira.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -22,8 +23,8 @@
                 <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rotate-12 rounded-[3rem] border border-white/10"></div>
 
                 <a href="/" class="relative flex w-fit items-center gap-3">
-                    <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-xl font-bold text-blue-800 shadow-lg shadow-blue-950/20">FC</span>
-                    <span><span class="block text-lg font-bold">Sistem Fotokopi</span><span class="block text-xs text-blue-100">Operasional usaha dalam satu tempat</span></span>
+                    <span class="rounded-xl bg-white p-2 shadow-lg shadow-blue-950/20"><img src="{{ asset('images/logoedira.png') }}" alt="Logo Edira Fotocopy" class="h-9 w-auto max-w-32 object-contain" /></span>
+                    <span><span class="block text-lg font-bold">Edira Fotocopy</span><span class="block text-xs text-blue-100">Operasional usaha dalam satu tempat</span></span>
                 </a>
 
                 <div class="relative max-w-xl">
@@ -44,14 +45,14 @@
                     </div>
                 </div>
 
-                <p class="relative text-xs text-blue-200">&copy; {{ now()->year }} Sistem Manajemen Usaha Fotokopi</p>
+                <p class="relative text-xs text-blue-200">&copy; {{ now()->year }} Edira Fotocopy</p>
             </section>
 
             <section class="flex min-h-screen items-center justify-center px-5 py-10 sm:px-10 lg:px-14 xl:px-24">
                 <div class="w-full max-w-md">
                     <a href="/" class="mb-9 flex items-center gap-3 lg:hidden">
-                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-700 text-lg font-bold text-white shadow-lg shadow-blue-200">FC</span>
-                        <span><span class="block font-bold text-gray-900">Sistem Fotokopi</span><span class="block text-xs text-gray-500">Manajemen operasional usaha</span></span>
+                        <span class="rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg shadow-blue-100"><img src="{{ asset('images/logoedira.jpeg') }}" alt="Logo Edira Fotocopy" class="h-9 w-auto max-w-28 object-contain" /></span>
+                        <span><span class="block font-bold text-gray-900">Edira Fotocopy</span><span class="block text-xs text-gray-500">Manajemen operasional usaha</span></span>
                     </a>
 
                     <div class="rounded-3xl border border-gray-200/80 bg-white p-6 shadow-2xl shadow-slate-200/70 sm:p-9">
