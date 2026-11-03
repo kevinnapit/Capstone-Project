@@ -48,5 +48,5 @@ databases:
   - name: capstoneProject
     plan: free
     region: singapore
-    databaseName: capstoneproject_9ob3
-    user: capstoneproject_9ob3_user
+    databaseName: capstoneproject_e3gx
+    user: capstoneproject_e3gx_user
