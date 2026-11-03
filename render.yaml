@@ -23,7 +23,7 @@ services:
         value: pgsql
       - key: DATABASE_URL
         fromDatabase:
-          name: capstone-project-ut-db
+          name: capstoneProject
           property: connectionString
       - key: LOG_CHANNEL
         value: stderr
@@ -45,8 +45,8 @@ services:
         sync: false
 
 databases:
-  - name: capstone-project-ut-db
+  - name: capstoneProject
     plan: free
     region: singapore
-    databaseName: capstone_project_ut
-    user: capstone_project_ut
+    databaseName: capstoneproject_9ob3
+    user: capstoneproject_9ob3_user
